@@ -12,7 +12,7 @@ function Acceuil(){
     
     
 
-    const [formData, setFormData] = useState({"name":"","description":"","date":"","price":0,"available_tickets":"","fileName":""})
+    const [formData, setFormData] = useState({name:"",description:"",date:"",price:0,available_tickets:"",location:"",fileName:""})
 
     const [allEvents, setAllEvents] = useState([])
 
@@ -22,10 +22,10 @@ function Acceuil(){
 
 
 
-    localStorage.setItem('events',JSON.stringify(cardTickets))
 
     function AddingEvent(e){
         e.preventDefault();
+        console.log(formData)
         const fetchAddingEvent = async()=>{
             try{
                 const response = await axios.post("http://localhost:8085/api/AddEvent",formData)
@@ -57,6 +57,17 @@ function Acceuil(){
         fetchAllEvents()
     },[])
 
+    var obj = {quantity:0}
+
+    function AddingToCart(event){
+        setCardTickets([...cardTickets,event]),
+        
+        cardTickets.map((ticket)=>{
+            Object.assign(ticket || {},obj || {})
+        })  
+        localStorage.setItem('events',JSON.stringify(cardTickets))
+    }
+
     console.log(cardTickets)
 
 
@@ -83,7 +94,7 @@ function Acceuil(){
                                     </div>
                                     <div className="flex items-center mt-6">
                                         <CiLocationOn/>
-                                        <p className="font-serif ml-4">USA</p>
+                                        <p className="font-serif ml-4">{event.location}</p>
                                     </div>
                                     <div className="flex items-center mt-2">
                                         <CiCalendarDate/>
@@ -94,7 +105,7 @@ function Acceuil(){
                                         <p className="font-serif ml-4">{event.available_tickets} available</p>
                                     </div>
                                     <p>{event.description}</p>
-                                    <button onClick={()=> setCardTickets([...cardTickets,event])} className="p-4 bg-blue-600 rounded-lg text-white mt-8 hover:bg-blue-400">Add to Card</button>
+                                    <button onClick={()=>AddingToCart(event)} className="p-4 bg-blue-600 rounded-lg text-white mt-8 hover:bg-blue-400">Add to Card</button>
                                 </div>
                             )
                         })}
@@ -126,6 +137,10 @@ function Acceuil(){
                         <div className="flex flex-col pl-10 pr-10 pb-6">
                             <label>Total Tickets Availables</label>
                             <input onChange={(e)=> setFormData({...formData,available_tickets:e.target.value})} type='number' className="bg-gray-100 rounded-lg p-3" />
+                        </div> 
+                        <div className="flex flex-col pl-10 pr-10 pb-6">
+                            <label>Location</label>
+                            <input onChange={(e)=> setFormData({...formData,location:e.target.value})} className="bg-gray-100 rounded-lg p-3" />
                         </div>  
                         <div className="flex flex-col pl-10 pr-10 pb-6">
                             <label>Image de l'event</label>

@@ -25,7 +25,28 @@ function Acceuil(){
 
     function AddingEvent(e){
         e.preventDefault();
-        console.log(formData)
+     
+        // const fetchAddingImage = async()=>{
+        //     try{
+        //         const file = new FormData();
+        //         const image = formData.fileName;
+               
+        //         file.append('image', image)
+                
+        //         const response = await axios.post("http://localhost:8085/cloudinary/upload",file
+        //             // ,{
+        //             // headers: {
+        //             //     "Content-Type": "multipart/form-data",
+        //             // },
+        //             // }
+        //         );
+        //         console.log(response)
+        //     }catch(error){
+        //         console.log(error);
+        //     }
+        // }
+        // await fetchAddingImage()
+        console.log(formData.fileName)
         const fetchAddingEvent = async()=>{
             try{
                 const response = await axios.post("http://localhost:8085/api/AddEvent",formData)
@@ -48,7 +69,7 @@ function Acceuil(){
                 if(response.status==200){
                     setAllEvents(response.data)
                 }
-                console.log(response)
+                //console.log(response)
             }catch(error){
                 console.log(error)
             }
@@ -68,7 +89,7 @@ function Acceuil(){
         localStorage.setItem('events',JSON.stringify(cardTickets))
     }
 
-    console.log(cardTickets)
+    console.log(formData)
 
 
     return(
@@ -84,7 +105,7 @@ function Acceuil(){
                         <button onClick={()=>setShowAddingPage(true)} className="cursor-pointer rounded-lg bg-purple-600 h-16 hover:bg-purple-400 md:p-4">ADD EVENT</button>
                     </div>
                     <div className="grid lg:grid-cols-3 gap-y-10 sm:grid-cols-2 gap-2">
-                        {allEvents.map((event)=>{
+                        {allEvents && allEvents.map((event)=>{
                             return(
                                 <div className="h-full rounded-lg flex flex-col p-4 w-80 border-1 border-gray-300">
                                     <img src="../../public/favicon.svg" className="w-full"/>
@@ -144,7 +165,7 @@ function Acceuil(){
                         </div>  
                         <div className="flex flex-col pl-10 pr-10 pb-6">
                             <label>Image de l'event</label>
-                            <input onChange={(e)=> setFormData({...formData,fileName:e.target.value})} type='file' className="rounded-lg p-3" />
+                            <input onChange={(e)=> setFormData({...formData,fileName:e.target.files[0]})} type='file' className="rounded-lg p-3" />
                         </div>  
                         <button className="text-white cursor-pointer bg-blue-700 rounded h-12 ml-10 mr-10 w-full">Create Event</button>
                     </form>

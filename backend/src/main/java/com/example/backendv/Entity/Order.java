@@ -21,12 +21,16 @@ public class Order {
 
     private Double totalPrice;
 
+    private Integer quantity;
+
     @ManyToOne
     private User user;
 
-    //@JsonIgnore
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="order")
-    private List<OrderItem> orderItems;
+
+
+//    //@JsonIgnore
+    @ManyToOne
+    private Event event;
 
     public Order(Long id){
         this.id = id;

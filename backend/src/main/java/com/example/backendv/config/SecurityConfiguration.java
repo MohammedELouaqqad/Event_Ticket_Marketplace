@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 import static org.apache.catalina.webresources.TomcatURLStreamHandlerFactory.disable;
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -23,7 +24,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private static final String[] WHILE_LIST_URL= {"/api/v1/auth/**"};
+    private static final String[] WHILE_LIST_URL= {"/api/v1/auth/**","/api/events/**","/api/orders/**"};
 
     private final JwtAuthentificationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
@@ -37,6 +38,9 @@ public class SecurityConfiguration {
                         req.requestMatchers(WHILE_LIST_URL)
                                 .permitAll()
                                 .requestMatchers(POST, "/api/v1/auth/**").hasAnyRole("USER")
+                                .requestMatchers(POST, "/api/events/**").hasAnyRole("USER")
+                                .requestMatchers(GET, "/api/events/**").hasAnyRole("USER")
+                                .requestMatchers(POST, "/api/orders/**").hasAnyRole("USER")
                                 .anyRequest()
                                 .authenticated()
                 )

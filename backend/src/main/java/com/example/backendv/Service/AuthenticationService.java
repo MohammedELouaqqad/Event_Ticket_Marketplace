@@ -24,14 +24,14 @@ public class AuthenticationService {
 
 
 
-    private final UserRepository reponsitory;
+    private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
 
     public List<User> getAllUsers(){
-        return reponsitory.findAll();
+        return repository.findAll();
     }
 
 
@@ -43,7 +43,7 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        var user = reponsitory.findByEmail(request.getEmail())
+        var user = repository.findByEmail(request.getEmail())
                 .orElseThrow();
 
         var jwtToken = jwtService.generateToken(user);
@@ -64,7 +64,7 @@ public class AuthenticationService {
                 .role(request.getRole())
                 .build();
 
-        reponsitory.save(newUser);
+        repository.save(newUser);
         var jwtToken = jwtService.generateToken(newUser);
 
         return AuthenticationResponse.builder()

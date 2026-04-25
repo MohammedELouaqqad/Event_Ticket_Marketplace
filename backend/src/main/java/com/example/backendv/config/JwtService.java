@@ -9,6 +9,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.security.Key;
 import java.security.PublicKey;
 import java.util.Date;
@@ -43,8 +44,8 @@ public class JwtService {
                 .claims(extractClaims)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-                .signWith(getSignIngKey(), Jwts.SIG.HS256)
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .signWith((SecretKey) getSignIngKey(), Jwts.SIG.HS256)
                 .compact();
 
     }
@@ -65,7 +66,7 @@ public class JwtService {
     private Claims extractAllClaims(String token){
         return Jwts
                 .parser()
-                .verifyWith(getSignIngKey())
+                .verifyWith((SecretKey) getSignIngKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();

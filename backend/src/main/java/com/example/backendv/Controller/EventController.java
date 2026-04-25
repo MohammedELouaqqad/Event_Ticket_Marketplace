@@ -23,24 +23,24 @@ public class EventController {
     private EventService eventService;
 
 
-    @GetMapping("/AllEvents")
+    @GetMapping("/events")
     public List<Event> getAllTickets(){
         return eventService.getAllTickets();
     }
 
 
-    @PostMapping("/AddEvent")
+    @PostMapping("/events")
     public ResponseEntity<?> CreateEvent(@RequestBody Event event){
         return eventService.CreateEvent(event);
     }
 
-    @PutMapping("/EditEvent/{id}")
+    @PutMapping("/events/{id}")
     public ResponseEntity<?> EditingEvent(@RequestBody Event newEvent, @PathVariable Long id){
         return eventService.EditingEvent(newEvent, id);
     }
 
 
-    @DeleteMapping("/DeleteEvent/{id}")
+    @DeleteMapping("/events/{id}")
     public ResponseEntity<?> DeleteEvent(@PathVariable Long id){
         return eventService.DeleteEvent(id);
     }

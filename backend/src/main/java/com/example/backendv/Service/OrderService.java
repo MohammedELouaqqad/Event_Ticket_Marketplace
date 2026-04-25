@@ -1,15 +1,10 @@
 package com.example.backendv.Service;
 
 import com.example.backendv.Entity.Order;
-import com.example.backendv.Entity.OrderItem;
-import com.example.backendv.Repository.OrderItemRepository;
 import com.example.backendv.Repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -21,8 +16,6 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    @Autowired
-    private OrderItemRepository orderItemRepository;
 
 
 
@@ -36,17 +29,7 @@ public class OrderService {
     public ResponseEntity<?> CreateNewOrder( Order order){
         try{
 
-            Order savedOrder = orderRepository.save(order);
-
-            List<OrderItem> newOrderItem = order.getOrderItems();
-
-            if(newOrderItem != null){
-                for(OrderItem orderItem : newOrderItem){
-                    Order newOrder = new Order(savedOrder.getId());
-                    orderItem.setOrder(newOrder);
-                    orderItemRepository.save(orderItem);
-                }
-            }
+            orderRepository.save(order);
 
             return ResponseEntity.ok(order);
 

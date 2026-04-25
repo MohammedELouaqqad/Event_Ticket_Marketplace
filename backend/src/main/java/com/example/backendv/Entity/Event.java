@@ -36,6 +36,6 @@ public class Event {
     
     private String fileName;
 
-    @OneToMany(mappedBy = "event")
-    private List<OrderItem> orderItems;
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "event")
+    private List<Order> orders;
 }

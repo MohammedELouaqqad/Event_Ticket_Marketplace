@@ -6,10 +6,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
 
-//@Setter
-//@Getter
-//@ToString
-@Data
+@Setter
+@Getter
+@ToString
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,7 +27,7 @@ public class Order {
 
 
 
-//    //@JsonIgnore
+    @ToString.Exclude
     @ManyToOne
     private Event event;
 

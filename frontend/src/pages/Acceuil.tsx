@@ -3,7 +3,7 @@ import Sidebar from "../Components/Sidebar"
 import { CiLocationOn } from "react-icons/ci";
 import { CiCalendarDate } from "react-icons/ci";
 import { IoTicketOutline } from "react-icons/io5";
-import axios from '../../node_modules/axios/lib/axios';
+import axios from 'axios';
 import EventCard from "../Components/EventCard";
 import AddingEvent from "../Components/AddingEvent";
 
@@ -12,43 +12,17 @@ import AddingEvent from "../Components/AddingEvent";
 function Acceuil(){
     
     const [showAddingPage, setShowAddingPage] = useState(false)    
-    const [allEvents, setAllEvents] = useState([])
+
 
     var token = localStorage.getItem('token') 
 
 
-
-
-    useEffect(()=>{
-        const fetchAllEvents = async()=>{
-            try{
-                const response = await axios.get("http://localhost:8085/api/events",
-                    {
-                        headers:{
-                            "Authorization":`Bearer ${token}`
-                        }
-                    }
-                )
-                if(response.status==200){
-                    setAllEvents(response.data)
-                }
-                console.log(response)
-            }catch(error){
-                console.log(error)
-            }
-            
-        }
-        fetchAllEvents()
-    },[])
-
-
-
-
+    const [filterEvents, setFilterEvents] = useState([])
 
 
     return(
         <div>
-            <Sidebar/>
+            <Sidebar setFilterEvents={setFilterEvents}/>
             {!showAddingPage ? 
                 <div className="p-34">
                     <div className="flex justify-between ">
@@ -58,8 +32,9 @@ function Acceuil(){
                         </div>
                         <button onClick={()=>setShowAddingPage(true)} className="cursor-pointer rounded-lg bg-purple-600 h-16 hover:bg-purple-400 md:p-4">ADD EVENT</button>
                     </div>
+
                     <div className="grid lg:grid-cols-3 gap-y-10 sm:grid-cols-2 gap-2">
-                        {allEvents && allEvents.map((event)=>{
+                        {filterEvents && filterEvents.map((event)=>{
                             return(
                                 <EventCard key={event.id} name={event}/>
                             )

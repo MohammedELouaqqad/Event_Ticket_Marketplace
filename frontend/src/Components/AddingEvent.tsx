@@ -1,4 +1,4 @@
-import axios from "axios/unsafe/axios.js";
+import axios from "axios";
 import { useState } from "react";
 
 

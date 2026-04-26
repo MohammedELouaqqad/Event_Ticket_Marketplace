@@ -24,7 +24,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private static final String[] WHILE_LIST_URL= {"/api/v1/auth/**","/api/events/**","/api/orders/**"};
+    private static final String[] WHILE_LIST_URL= {"/api/**"};
 
     private final JwtAuthentificationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
@@ -35,14 +35,14 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers(WHILE_LIST_URL)
-                                .permitAll()
-                                .requestMatchers(POST, "/api/v1/auth/**").hasAnyRole("USER")
-                                .requestMatchers(POST, "/api/events/**").hasAnyRole("USER")
-                                .requestMatchers(GET, "/api/events/**").hasAnyRole("USER")
-                                .requestMatchers(POST, "/api/orders/**").hasAnyRole("USER")
-                                .anyRequest()
-                                .authenticated()
+                        req.anyRequest().permitAll()
+//                        req.requestMatchers(WHILE_LIST_URL).permitAll()
+//                                    .requestMatchers("/api/**").permitAll()
+//                                .requestMatchers(POST, "/api/v1/auth/**").permitAll()
+//                                .requestMatchers(POST, "/api/events/**").authenticated()
+//                                .requestMatchers(GET, "/api/events/**").authenticated()
+//                                .requestMatchers(POST, "/api/orders/**").authenticated()
+//                                .anyRequest().authenticated()
                 )
 
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

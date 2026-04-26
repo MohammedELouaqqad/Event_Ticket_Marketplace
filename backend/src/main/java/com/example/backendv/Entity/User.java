@@ -12,10 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-//@Setter
-//@Getter
-//@ToString
-@Data
+@Setter
+@Getter
+@ToString
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

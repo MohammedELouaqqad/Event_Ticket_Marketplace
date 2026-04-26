@@ -9,20 +9,23 @@ function EventCard(name){
     const [event, setEvent] = useState(name.name)
 
 
-   var obj = {quantity:0}
+//    var obj = {quantity:0}
+
 
     function addingToCart(eventToCard){
 
-        console.log(eventToCard)
-        setCardTickets(eventToCard)
         
-        setCardTickets(Object.assign(cardTickets || {},obj || {}))
+        setCardTickets(eventToCard)
+
+        // Object.assign(cardTickets || {},obj || {})
 
         console.log(cardTickets)
-
   
         localStorage.setItem('events',JSON.stringify(cardTickets))
     }
+
+
+   console.log(cardTickets)
 
     
     return(

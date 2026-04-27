@@ -6,7 +6,7 @@ import { IoTicketOutline } from "react-icons/io5";
 import axios from 'axios';
 import EventCard from "../Components/EventCard";
 import AddingEvent from "../Components/AddingEvent";
-
+import {type Event} from "../types/index"
 
 
 function Acceuil(){
@@ -17,7 +17,7 @@ function Acceuil(){
     var token = localStorage.getItem('token') 
 
 
-    const [filterEvents, setFilterEvents] = useState([])
+    const [filterEvents, setFilterEvents] = useState<Event[]>([])
 
 
     return(
@@ -34,9 +34,9 @@ function Acceuil(){
                     </div>
 
                     <div className="grid lg:grid-cols-3 gap-y-10 sm:grid-cols-2 gap-2">
-                        {filterEvents && filterEvents.map((event)=>{
+                        {filterEvents && filterEvents.map((event: Event)=>{
                             return(
-                                <EventCard key={event.id} name={event}/>
+                                <EventCard key={event.id} event={event}/>
                             )
                         })}
                     </div>

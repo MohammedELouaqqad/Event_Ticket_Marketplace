@@ -1,18 +1,21 @@
 import axios from "axios"
-import { useState } from "react"
+import React, { useState } from "react"
 import { useNavigate } from 'react-router-dom';
-
+import { type UserAuthenticate} from "../types/index"
 
 
 
 function Authenticate(){
 
-    const [user, setUser] = useState({email:"",password:"",role:"USER"})
+
+
+    const [user, setUser] = useState<UserAuthenticate>({email:"",password:"",role:"USER"})
     var token;
 
     const navigate = useNavigate()
+    
 
-    function authenticate(e){
+    function authenticate(e: React.ChangeEvent<HTMLFormElement>){
         e.preventDefault()
         console.log(user)
         const fetchAuthenticateUser = async()=>{

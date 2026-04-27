@@ -1,10 +1,18 @@
 
 import { useNavigate } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import axios from "axios";
+import {type Event} from "../types/index"
 
-function Sidebar({setFilterEvents}){
+
+
+
+type SidebarProps={
+    setFilterEvents: Dispatch<SetStateAction<Event[]>>;
+}
+
+function Sidebar({setFilterEvents}:SidebarProps){
 
     const [allEvents, setAllEvents] = useState([])
 
@@ -40,16 +48,24 @@ function Sidebar({setFilterEvents}){
         fetchAllEvents()
     },[])
 
-    const getFilterEvents = (query, allEvents)=>{
+
+
+    type getFilterEventsProps={
+        query: string,
+        allEvents: Event[]
+    }
+
+
+    const getFilterEvents = ({query, allEvents}: getFilterEventsProps)=>{
         if(!query){
             return allEvents;
         }
-        return allEvents.filter((event)=> event.name.includes(query))
+        return allEvents.filter((event : Event)=> event.name.includes(query))
     }
 
 
 
-    setFilterEvents(getFilterEvents(query, allEvents))
+    setFilterEvents(getFilterEvents({ query, allEvents}))
 
 
 

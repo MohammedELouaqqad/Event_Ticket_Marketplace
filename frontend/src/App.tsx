@@ -15,9 +15,9 @@ function App() {
       <Routes>
 
         <Route path='/' element={<Authenticate/>}/>
-        <Route path='/Register' element={<Register/>}/>
-        <Route path='/Acceuil' element={<Acceuil/>}/>
-        <Route path='/Card' element={<Card/>}/>
+        <Route path='/register' element={<Register/>}/>
+        <Route path='/acceuil' element={<Acceuil/>}/>
+        <Route path='/card' element={<Card/>}/>
 
 
       </Routes>

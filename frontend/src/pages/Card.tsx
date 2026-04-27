@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../Components/Sidebar"
 import { CiLocationOn } from "react-icons/ci";
 import { CiCalendarDate } from "react-icons/ci";
@@ -6,15 +6,17 @@ import { IoTicketOutline } from "react-icons/io5";
 import { MdDeleteOutline } from "react-icons/md";
 import axios from "axios"
 import { useNavigate } from "react-router-dom";
+import { type Event } from "../types/index"
 
-
+import { type Order} from "../types/index"
 
 
 function Card(){
 
 
+
     const [ticket, setTicket] = useState({})
-    const [order, setOrder] =useState({event:{},user:{id:2},totalPrice:0,quantity:1})
+    const [order, setOrder] =useState<Order>({event:{},user:{id:2},totalPrice:0,quantity:1})
 
     const navigate = useNavigate()
 
@@ -39,8 +41,8 @@ function Card(){
 
 
 
-    function handleAddQuantity(eventId){
-        setOrder(t => {
+    function handleAddQuantity(eventId: number){
+        setOrder((t: Order) => {
         
             console.log(t)
             if(t.event.id === eventId){
@@ -53,7 +55,7 @@ function Card(){
         localStorage.setItem('orders',JSON.stringify(order))
     }
 
-    function handleMinusQuantity(eventId){
+    function handleMinusQuantity(eventId: number){
         setOrder(t => {
         
             if(t.event.id === eventId){
@@ -99,14 +101,14 @@ function Card(){
         fetchAddingOrder()
     } 
 
-    const [filterEvents, setFilterEvents] = useState([])
+    const [filterEvents, setFilterEvents] = useState<Event[]>([])
 
     return(
         <div>
              <Sidebar setFilterEvents={setFilterEvents}/>
             <div className=" p-20">
                 <h1 className="font-mono">Your Cart</h1>
-                { order.event !== {} && 
+                { order.event != {} && 
                     <div key={order.event.id}>
                         <div className="bg-gray-200 w-200 h-full rounded-lg flex p-4 w-80 border-1 border-gray-300">
                             <img src="../../public/favicon.svg" className="w-30"/>
@@ -118,7 +120,7 @@ function Card(){
                                 </div>
                                 <div className="flex items-center mb-4 ml-10">
                                     <IoTicketOutline/>
-                                    <p className="font-serif ml-4">{order.event.available_ticket} available</p>
+                                    <p className="font-serif ml-4">{order.event.available_tickets} available</p>
                                 </div>
                                 <div className="flex justify-between ml-10 p-2">
                                     <button  onClick={()=>handleMinusQuantity(order.event.id)}  className=" hover:bg-white cursor-pointer border-2  w-6 rounded-full">-</button>

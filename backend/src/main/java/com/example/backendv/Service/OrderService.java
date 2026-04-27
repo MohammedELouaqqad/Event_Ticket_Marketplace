@@ -31,6 +31,10 @@ public class OrderService {
     private UserRepository userRepository;
 
 
+    @Autowired
+    private QrCodeGeneratorService qrCodeGeneratorService;
+
+
 
 
 
@@ -56,11 +60,14 @@ public class OrderService {
 
             orderRepository.save(order);
 
+
+
             User user=userRepository.findUserById(order.getUser().getId());
 
-            senderService.sendEmail(user.getEmail(),
+            senderService.sendEmailWithAttachment(user.getEmail(),
                     "Ticket of "+order.getEvent().getName()+" Event",
-                    "Your Order pass successfully");
+                    "Hello "+order.getUser().getUsername()+"\nYour order has been successfully confirmed.\nEvent: "+order.getEvent().getName()+" "+order.getEvent().getLocation()+".\nOrder ID: "+order.getId()+".\nYour ticket is attached to this email as a QR code. Please present it at the entrance for scanning.\nThank you,\nThe Events Team",
+                    qrCodeGeneratorService.generateByteQRCode("This the identifier of this order "+order.getId(),400,400));
 
 
 

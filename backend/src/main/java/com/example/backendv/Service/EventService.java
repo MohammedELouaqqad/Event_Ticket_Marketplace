@@ -27,7 +27,6 @@ public class EventService {
         try{
             System.out.println("Hello:"+event);
             eventRepository.save(event);
-
             return ResponseEntity.ok(event);
         }catch(Exception e){
             return ResponseEntity.internalServerError().body("Error in the Server:"+e);

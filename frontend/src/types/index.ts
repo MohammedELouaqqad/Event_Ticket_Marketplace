@@ -25,8 +25,13 @@ export type UserAuthenticate={
 
 export type UserRegister={
     id?: number;
-    username: string;
+    name: string;
     email:string;
-    password: string;
+    password?: string;
     role: string
+}
+
+export type UserContextType={
+    userConnected: UserRegister | null;
+    setUserConnected: (user:UserRegister | null) => void
 }

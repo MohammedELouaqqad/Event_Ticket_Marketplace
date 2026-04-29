@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Sidebar from "../Components/Sidebar"
 import { CiLocationOn } from "react-icons/ci";
 import { CiCalendarDate } from "react-icons/ci";
@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { type Event } from "../types/index"
 
 import { type Order} from "../types/index"
+import { UserContext } from "../context/UserContext";
 
 
 function Card(){
@@ -16,11 +17,19 @@ function Card(){
 
 
     const [ticket, setTicket] = useState({})
-    const [order, setOrder] =useState<Order>({event:{},user:{id:2},totalPrice:0,quantity:1})
+
+    const context= useContext(UserContext)
+
+    const {userConnected, setUserConnected}=context;   
+        
+    if(!context){
+        return;
+    }
+
+
+    const [order, setOrder] =useState<Order>({event:{},user:{id:userConnected?.id},totalPrice:0,quantity:1})
 
     const navigate = useNavigate()
-
-
 
 
     useEffect(()=>{
@@ -77,11 +86,15 @@ function Card(){
 
     var token=localStorage.getItem('token')
 
+    useEffect(()=>{
+        console.log(userConnected)
+    },[userConnected])
+
 
     function handleAddingOrder(){
         const fetchAddingOrder = async()=>{
             try{
-         
+                console.log(userConnected.id)
                 const response = await axios.post("http://localhost:8085/api/orders",order,
                     {
                         headers:{

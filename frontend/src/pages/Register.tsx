@@ -10,15 +10,16 @@ function Register(){
 
 
 
-    const [user, setUser] = useState<UserRegister>({username:"",email:"",password:"",role:"USER"})
+    const [user, setUser] = useState<UserRegister>({name:"",email:"",password:"",role:"USER"})
    
 
     const navigate = useNavigate()
 
-    function authenticate(e: React.ChangeEvent<HTMLInputElement>){
+    function register(e: React.ChangeEvent<HTMLFormElement>){
+        alert("HIII")
         e.preventDefault()
         console.log(user)
-        const fetchAuthenticateUser = async()=>{
+        const fetchRegisterUser = async()=>{
             try{
                 const response = await axios.post("http://localhost:8085/api/v1/auth/register",user)
                 if(response.status === 200){
@@ -29,16 +30,16 @@ function Register(){
                 console.log(error)
             }
         }
-        fetchAuthenticateUser()
+        fetchRegisterUser()
     }
 
     return (
         <div className="flex items-center justify-center h-screen">
-            <form onSubmit={()=>authenticate} className="p-10 bg-blue-400 w-full p-10 md:w-120 rounded-lg">
+            <form onSubmit={register} className="p-10 bg-blue-400 w-full p-10 md:w-120 rounded-lg">
                 <h1 className="text-center text-white text-2xl font-mono">Register</h1>
                 <div className="flex flex-col mt-10">
-                    <label>Username</label>
-                    <input onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setUser({...user,username:e.target.value})} className="bg-gray-200 rounded-lg p-3" type='text' placeholder="Enter your Username"/>
+                    <label>name</label>
+                    <input onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setUser({...user,name:e.target.value})} className="bg-gray-200 rounded-lg p-3" type='text' placeholder="Enter your Username"/>
                 </div>
                 <div className="flex flex-col mt-10">
                     <label>Email</label>

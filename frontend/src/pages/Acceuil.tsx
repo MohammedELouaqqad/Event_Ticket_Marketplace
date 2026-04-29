@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Sidebar from "../Components/Sidebar"
 import { CiLocationOn } from "react-icons/ci";
 import { CiCalendarDate } from "react-icons/ci";
@@ -7,6 +7,7 @@ import axios from 'axios';
 import EventCard from "../Components/EventCard";
 import AddingEvent from "../Components/AddingEvent";
 import {type Event} from "../types/index"
+import { UserContext } from "../context/UserContext";
 
 
 function Acceuil(){
@@ -20,6 +21,20 @@ function Acceuil(){
     const [filterEvents, setFilterEvents] = useState<Event[]>([])
 
 
+
+    const context= useContext(UserContext)
+
+
+    if(!context){
+        return;
+    }
+
+
+    const {userConnected, setUserConnected}=context;  
+
+
+ 
+
     return(
         <div>
             <Sidebar setFilterEvents={setFilterEvents}/>
@@ -28,7 +43,7 @@ function Acceuil(){
                     <div className="flex justify-between ">
                         <div className="flex flex-col mb-20">
                             <h1 className="font-mono text-2xl">Upcoming Events</h1>
-                            <p>Discover & book tickets for amazing events</p>
+                            <p>{userConnected?.name} Discover & book tickets for amazing events</p>
                         </div>
                         <button onClick={()=>setShowAddingPage(true)} className="cursor-pointer rounded-lg bg-purple-600 h-16 hover:bg-purple-400 md:p-4">ADD EVENT</button>
                     </div>

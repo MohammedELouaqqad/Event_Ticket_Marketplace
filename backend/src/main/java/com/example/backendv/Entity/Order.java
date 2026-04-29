@@ -22,6 +22,8 @@ public class Order {
 
     private Integer quantity;
 
+
+    @ToString.Exclude
     @ManyToOne
     private User user;
 

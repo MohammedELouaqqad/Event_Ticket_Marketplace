@@ -4,7 +4,6 @@ package com.example.backendv.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,7 +23,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private static final String[] WHILE_LIST_URL= {"/api/**"};
+    private static final String[] WHILE_LIST_URL= {"/api/v1/**","/api/events/**","/api/orders/**"};
 
     private final JwtAuthentificationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
@@ -35,14 +34,13 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.anyRequest().permitAll()
-//                        req.requestMatchers(WHILE_LIST_URL).permitAll()
-//                                    .requestMatchers("/api/**").permitAll()
-//                                .requestMatchers(POST, "/api/v1/auth/**").permitAll()
-//                                .requestMatchers(POST, "/api/events/**").authenticated()
-//                                .requestMatchers(GET, "/api/events/**").authenticated()
-//                                .requestMatchers(POST, "/api/orders/**").authenticated()
-//                                .anyRequest().authenticated()
+//                        req.anyRequest().permitAll()
+                        req.requestMatchers(WHILE_LIST_URL).permitAll()
+                                .requestMatchers("/api/v1/auth/**").permitAll()
+                                .requestMatchers(POST, "/api/events/**").hasAuthority("ADMIN")
+                                .requestMatchers(GET, "/api/events/**").authenticated()
+                                .requestMatchers(POST, "/api/orders/**").authenticated()
+                                .requestMatchers(GET, "/api/orders/**").hasAuthority("ADMIN")
                 )
 
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

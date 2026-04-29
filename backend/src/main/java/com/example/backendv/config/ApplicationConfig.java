@@ -21,12 +21,13 @@ public class ApplicationConfig {
 
     private final UserRepository userRepository;
 
+    // we use to search User by her username
     @Bean
     public UserDetailsService userDetailsService(){
         return username -> userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not Found"));
     }
-
+    // We use this method in Login: return User(by UserDetails) and verify password (by passwordEncoder)
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService());
@@ -39,6 +40,8 @@ public class ApplicationConfig {
         return config.getAuthenticationManager();
     }
 
+
+    //AuthenticationProvider use this method to compare hashs
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

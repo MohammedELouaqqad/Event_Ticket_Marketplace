@@ -46,27 +46,23 @@ public class OrderService {
 
     public ResponseEntity<String> CreateNewOrder( Order order){
         try{
-
-            System.out.println(order.getQuantity()>order.getEvent().getAvailable_tickets());
-
             if( order.getQuantity() > order.getEvent().getAvailable_tickets() ){
                 return ResponseEntity.badRequest().body("This quantity not available");
             }
+            System.out.println("HIIIIIII"+order);
             Event event = eventRepository.findEventById(order.getEvent().getId());
-
             event.setAvailable_tickets(event.getAvailable_tickets() - order.getQuantity());
-
             order.setTotalPrice(order.getQuantity()*order.getEvent().getPrice());
+            System.out.println("HIIIIIII"+event);
 
             orderRepository.save(order);
 
-
-
             User user=userRepository.findUserById(order.getUser().getId());
+            System.out.println("HIIIIIII"+user);
 
             senderService.sendEmailWithAttachment(user.getEmail(),
                     "Ticket of "+order.getEvent().getName()+" Event",
-                    "Hello "+order.getUser().getUsername()+"\nYour order has been successfully confirmed.\nEvent: "+order.getEvent().getName()+" "+order.getEvent().getLocation()+".\nOrder ID: "+order.getId()+".\nYour ticket is attached to this email as a QR code. Please present it at the entrance for scanning.\nThank you,\nThe Events Team",
+                    "Hello "+user.getName()+"\nYour order has been successfully confirmed.\nEvent: "+order.getEvent().getName()+" "+order.getEvent().getLocation()+".\nOrder ID: "+order.getId()+".\nYour ticket is attached to this email as a QR code. Please present it at the entrance for scanning.\nThank you,\nThe Events Team",
                     qrCodeGeneratorService.generateByteQRCode("This the identifier of this order "+order.getId(),400,400));
 
 

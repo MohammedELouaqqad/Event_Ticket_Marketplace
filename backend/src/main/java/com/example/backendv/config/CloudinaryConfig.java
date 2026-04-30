@@ -15,7 +15,7 @@ public class CloudinaryConfig {
     @Bean
     public Cloudinary getCloudinary(){
         Map config = new HashMap();
-        config.put("Cloud_name","deggqs5fq");
+        config.put("cloud_name","deggqs5fq");
         config.put("api_key","276814581242362");
         config.put("api_secret","rkZMuRnWxvTua8UiQSjWLtyrnbo");
         config.put("secure",true);

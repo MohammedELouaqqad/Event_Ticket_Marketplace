@@ -19,12 +19,7 @@ function EventCard({event}: EventCardProps){
 
 
     function addingToCart(eventToCard: Event){
-
-        
         setCardTickets(eventToCard)
-
-        // Object.assign(cardTickets || {},obj || {})
-
         console.log(cardTickets)
   
         localStorage.setItem('events',JSON.stringify(cardTickets))
@@ -35,26 +30,26 @@ function EventCard({event}: EventCardProps){
 
     
     return(
-        <div key={oneEvent.id} className="h-full rounded-lg flex flex-col p-4 w-80 border-1 border-gray-300">
-            <img src="../../public/favicon.svg" className="w-full"/>
+        <div key={oneEvent.id} className="h-full rounded-lg flex flex-col p-4 w-full border border-gray-300">
+            <img src="../../public/favicon.svg" className="object-cover h-48 w-full"/>
             <div className="flex justify-between mt-6 items-center">
                 <h2 className="text-xl">{oneEvent.name}</h2>
-                <p className="rounded-lg p-4 bg-green-200 text-green-900">{oneEvent.price}$</p>
+                <p className="rounded-lg p-4 bg-green-200 text-green-900 text-sm font-bold">{oneEvent.price}$</p>
             </div>
             <div className="flex items-center mt-6">
-                <CiLocationOn/>
+                <CiLocationOn className="text-indigo-400"/>
                 <p className="font-serif ml-4">{oneEvent.location}</p>
             </div>
             <div className="flex items-center mt-2">
-                <CiCalendarDate/>
+                <CiCalendarDate className="text-indigo-400"/>
                 <p className="font-serif ml-4">{oneEvent.date}</p>
             </div>
             <div className="flex items-center mt-2 mb-4">
-                <IoTicketOutline/>
+                <IoTicketOutline className="text-indigo-400"/>
                 <p className="font-serif ml-4">{oneEvent.available_tickets} available</p>
             </div>
             <p>{oneEvent.description}</p>
-            <button onClick={()=>addingToCart(oneEvent)} className="p-4 bg-blue-600 rounded-lg text-white mt-8 hover:bg-blue-400">Add to Card</button>
+            <button onClick={()=>addingToCart(oneEvent)} className="p-4 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white mt-auto ">Add to Card</button>
         </div>
     )
 }

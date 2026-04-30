@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css'
 import Authenticate from './pages/Authenticate';
 
-import Acceuil from './pages/Acceuil';
+import Events from './pages/Events';
 import Card from './pages/Card';
 import Register from './pages/Register';
 import { UserContext } from './context/UserContext';
@@ -21,10 +21,8 @@ function App() {
         <Routes>
           <Route path='/' element={<Authenticate/>}/>
           <Route path='/register' element={<Register/>}/>
-          <Route path='/acceuil' element={<Acceuil/>}/>
+          <Route path='/events' element={<Events/>}/>
           <Route path='/card' element={<Card/>}/>
-
-
         </Routes>
       </BrowserRouter>
     </UserContext.Provider>

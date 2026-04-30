@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import Sidebar from "../Components/Sidebar"
+import NavBar from "../Components/NavBar"
 import { CiLocationOn } from "react-icons/ci";
 import { CiCalendarDate } from "react-icons/ci";
 import { IoTicketOutline } from "react-icons/io5";
@@ -16,7 +16,7 @@ function Card(){
 
 
 
-    const [ticket, setTicket] = useState({})
+    const [ticket, setTicket] = useState(null)
 
     const context= useContext(UserContext)
 
@@ -114,48 +114,52 @@ function Card(){
         fetchAddingOrder()
     } 
 
-    const [filterEvents, setFilterEvents] = useState<Event[]>([])
+
 
     return(
         <div>
-             <Sidebar setFilterEvents={setFilterEvents}/>
+             <NavBar/>
             <div className=" p-20">
                 <h1 className="font-mono">Your Cart</h1>
-                { order.event != {} && 
-                    <div key={order.event.id}>
-                        <div className="bg-gray-200 w-200 h-full rounded-lg flex p-4 w-80 border-1 border-gray-300">
-                            <img src="../../public/favicon.svg" className="w-30"/>
-                            <div>
-                                <h2 className="text-xl ml-10">{order.event.name}</h2>
-                                <div className="flex items-center mt-1 ml-10">
-                                    <CiLocationOn/>
-                                    <p className="font-serif ml-4">{order.event.location}</p>
+                { ticket !== null ?
+                    <div key={order.event.id} className="flex gap-8 flex-col lg:flex-row">
+                        <div className="w-full">
+                            <div className=" bg-gray-200 w-full h-full rounded-lg flex p-4 border-1 border-gray-300">
+                                <img src="../../public/favicon.svg" className="rounded-lg object-cover w-24 h-24 md:w-32 md:h-32"/>
+                                <div>
+                                    <h2 className="text-xl ml-10">{order.event.name}</h2>
+                                    <div className="flex items-center mt-1 ml-10">
+                                        <CiLocationOn/>
+                                        <p className="font-serif ml-4">{order.event.location}</p>
+                                    </div>
+                                    <div className="flex items-center mb-4 ml-10">
+                                        <IoTicketOutline/>
+                                        <p className="font-serif ml-4">{order.event.available_tickets} available</p>
+                                    </div>
+                                    <div className="flex justify-between ml-10 p-2">
+                                        <button  onClick={()=>handleMinusQuantity(order.event.id)}  className=" hover:bg-white cursor-pointer border-2  w-8 h-8 flex items-center justify-center">-</button>
+                                        <p>{order.quantity}</p>
+                                        <button onClick={()=>handleAddQuantity(order.event.id)} className="hover:bg-white cursor-pointer border-2  w-8 h-8 flex items-center justify-center">+</button>
+                                    </div>
                                 </div>
-                                <div className="flex items-center mb-4 ml-10">
-                                    <IoTicketOutline/>
-                                    <p className="font-serif ml-4">{order.event.available_tickets} available</p>
+                                <div className="flex flex-col ml-10 mt-1">            
+                                    <p className="rounded-lg text-2xl font-bold text-ind">{order.event.price}$</p>
+                                    <button onClick={()=> handleRemoveTicket()} className="text-red-500 text-xl hover:bg-red-200 rounded-full p-2 cursor-pointer flex justify-center mt-2"><MdDeleteOutline /></button>
                                 </div>
-                                <div className="flex justify-between ml-10 p-2">
-                                    <button  onClick={()=>handleMinusQuantity(order.event.id)}  className=" hover:bg-white cursor-pointer border-2  w-6 rounded-full">-</button>
-                                    <p>{order.quantity}</p>
-                                    <button onClick={()=>handleAddQuantity(order.event.id)} className="hover:bg-white cursor-pointer border-2  w-6 rounded-full">+</button>
-                                </div>
+                                
                             </div>
-                            <div className="flex flex-col ml-10 mt-1">            
-                                <p className="rounded-lg text-black">{order.event.price}$</p>
-                                <button onClick={()=> handleRemoveTicket()} className="text-red-500 text-xl hover:bg-red-200 rounded-full p-2 cursor-pointer flex justify-center mt-2"><MdDeleteOutline /></button>
-                            </div>
-                            
                         </div>
-                        <button onClick={handleAddingOrder} type='submit' className="bg-blue-800 hover:bg-blue-400 text-white font-bold text-center p-4 rounded-lg w-100">PASSE Commande</button>
+                        <div className="bg-white rounded-xl shadow-md p-6  w-full lg:min-w-64 lg:w-auto">
+                            <h1>Summary</h1>
+                            <h2>Subtotal</h2>
+                            <h2>Taxes</h2>
+                            <p>Total </p>
+                            <button onClick={handleAddingOrder} type='submit' className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-center p-4 rounded-lg w-full">Get Order</button>
+                        </div>
                     </div>
-                }   
-                {
-                    order ==={} && 
+                :
                     <div className="bg-red-400 rounded-lg text-center w-60 p-2 text-red-800 mt-10">No Order Available</div>
-                }
-                
-               
+                }                 
             </div>
         </div>
     )

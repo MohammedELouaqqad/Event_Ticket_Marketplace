@@ -31,7 +31,7 @@ function EventCard({event}: EventCardProps){
     
     return(
         <div key={oneEvent.id} className="h-full rounded-lg flex flex-col p-4 w-full border border-gray-300">
-            <img src="../../public/favicon.svg" className="object-cover h-48 w-full"/>
+            <img src={oneEvent.fileName} loading="lazy" alt="No Image available" className="bg-gray-900 object-contain aspect-video w-full"/>
             <div className="flex justify-between mt-6 items-center">
                 <h2 className="text-xl">{oneEvent.name}</h2>
                 <p className="rounded-lg p-4 bg-green-200 text-green-900 text-sm font-bold">{oneEvent.price}$</p>

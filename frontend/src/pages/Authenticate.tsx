@@ -22,7 +22,8 @@ function Authenticate(){
     }
 
     const {userConnected, setUserConnected}=context;   
-    
+    // const {currentUser, setCurrentUser}=context;  
+    // const {isAuthenticated, setIsAuthenticated} =
 
 
 

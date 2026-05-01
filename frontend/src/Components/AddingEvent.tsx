@@ -27,13 +27,16 @@ function AddingEvent(){
                     },
                     }
                 );
+                if(response.status===200){
+                    setEvent({...event,fileName:response.data.url})
+                }
                 console.log(response)
             }catch(error){
                 console.log(error);
             }
         }
         await fetchAddingImage()
-        console.log(event.fileName.name)
+        console.log(event)
         const fetchAddingEvent = async()=>{
             try{
                 const response = await axios.post("http://localhost:8085/api/events",event,
@@ -44,7 +47,7 @@ function AddingEvent(){
                     }
                 )
                 if(response.status==200){
-                    //setShowAddingPage(false)
+                    alert("Event Added with Success")
                 }
                 console.log(response)
             }catch(error){

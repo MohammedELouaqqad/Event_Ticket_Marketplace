@@ -30,8 +30,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
 
-    public List<User> getAllUsers(){
-        return repository.findAll();
+    public ResponseEntity<List<User>> getAllUsers(){
+        return ResponseEntity.ok(repository.findAll());
     }
 
 
@@ -64,7 +64,9 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
                 .build();
-
+        if(repository.existsUserByEmail(request.getEmail())){
+            ResponseEntity.badRequest().body("This Email already used");
+        }
         repository.save(newUser);
         var jwtToken = jwtService.generateToken(newUser);
 

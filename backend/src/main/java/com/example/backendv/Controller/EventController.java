@@ -16,32 +16,35 @@ import java.util.List;
 @RequestMapping("/api")
 public class EventController {
 
-    @Autowired
-    private EventRepository eventRepository;
 
     @Autowired
     private EventService eventService;
 
 
     @GetMapping("/events")
-    public List<Event> getAllTickets(){
-        return eventService.getAllTickets();
+    public ResponseEntity<List<Event>> getAllEvents(){
+        return eventService.getAllEvents();
+    }
+
+    @GetMapping("/events/{id}")
+    public ResponseEntity<Event> getEventById(@PathVariable Long id){
+        return eventService.getEventById(id);
     }
 
 
     @PostMapping("/events")
-    public ResponseEntity<?> CreateEvent(@RequestBody Event event){
+    public ResponseEntity<String> CreateEvent(@RequestBody Event event){
         return eventService.CreateEvent(event);
     }
 
     @PutMapping("/events/{id}")
-    public ResponseEntity<?> EditingEvent(@RequestBody Event newEvent, @PathVariable Long id){
+    public ResponseEntity<String> EditingEvent(@RequestBody Event newEvent, @PathVariable Long id){
         return eventService.EditingEvent(newEvent, id);
     }
 
 
     @DeleteMapping("/events/{id}")
-    public ResponseEntity<?> DeleteEvent(@PathVariable Long id){
+    public ResponseEntity<String> DeleteEvent(@PathVariable Long id){
         return eventService.DeleteEvent(id);
     }
 

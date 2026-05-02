@@ -20,7 +20,7 @@ public class Order {
 
     private Double totalPrice;
 
-    private Integer quantity;
+    private Long quantity;
 
 
     @ToString.Exclude

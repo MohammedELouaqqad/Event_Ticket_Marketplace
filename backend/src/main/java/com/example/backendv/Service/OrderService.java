@@ -38,10 +38,9 @@ public class OrderService {
 
 
 
-    public List<Order> getAllOrders(){
-        return  orderRepository.findAll();
+    public ResponseEntity<List<Order>> getAllOrders(){
+        return  ResponseEntity.ok(orderRepository.findAll());
     }
-
 
 
     public ResponseEntity<String> CreateNewOrder( Order order){
@@ -49,16 +48,13 @@ public class OrderService {
             if( order.getQuantity() > order.getEvent().getAvailable_tickets() ){
                 return ResponseEntity.badRequest().body("This quantity not available");
             }
-            System.out.println("HIIIIIII"+order);
             Event event = eventRepository.findEventById(order.getEvent().getId());
             event.setAvailable_tickets(event.getAvailable_tickets() - order.getQuantity());
             order.setTotalPrice(order.getQuantity()*order.getEvent().getPrice());
-            System.out.println("HIIIIIII"+event);
 
             orderRepository.save(order);
 
             User user=userRepository.findUserById(order.getUser().getId());
-            System.out.println("HIIIIIII"+user);
 
             senderService.sendEmailWithAttachment(user.getEmail(),
                     "Ticket of "+order.getEvent().getName()+" Event",
@@ -73,4 +69,5 @@ public class OrderService {
             return ResponseEntity.internalServerError().body("Error in the Server:"+e);
         }
     }
+
 }

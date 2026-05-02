@@ -17,27 +17,30 @@ public class EventService {
     private EventRepository eventRepository;
 
 
-    public List<Event> getAllTickets(){
-        return eventRepository.findAll();
+    public ResponseEntity<List<Event>> getAllEvents(){
+        return ResponseEntity.ok(eventRepository.findAll());
     }
 
 
+    public ResponseEntity<Event> getEventById(Long id){
+        return ResponseEntity.ok(eventRepository.findEventById(id));
+    }
 
-    public ResponseEntity<?> CreateEvent( Event event){
+
+    public ResponseEntity<String> CreateEvent( Event event){
         try{
-            System.out.println("Hello:"+event);
             eventRepository.save(event);
-            return ResponseEntity.ok(event);
+            return ResponseEntity.ok("Event created with success");
         }catch(Exception e){
             return ResponseEntity.internalServerError().body("Error in the Server:"+e);
         }
     }
 
 
-    public ResponseEntity<?> EditingEvent( Event newEvent, Long id){
+    public ResponseEntity<String> EditingEvent( Event newEvent, Long id){
         try{
             Event event = eventRepository.findEventById(id);
-            System.out.println(event);
+
             event.setDate(newEvent.getDate());
             event.setName(newEvent.getName());
             event.setPrice(newEvent.getPrice());
@@ -47,9 +50,7 @@ public class EventService {
 
             eventRepository.save(event);
 
-            System.out.println(event);
-
-            return ResponseEntity.ok(event);
+            return ResponseEntity.ok("Event Edited with success");
         }catch(Exception e){
             return ResponseEntity.internalServerError().body("Error in the Server:"+e);
         }
@@ -57,7 +58,7 @@ public class EventService {
 
 
 
-    public ResponseEntity<?> DeleteEvent( Long id){
+    public ResponseEntity<String> DeleteEvent( Long id){
         try{
             eventRepository.deleteById(id);
             return ResponseEntity.ok("The Event deleted with Success");

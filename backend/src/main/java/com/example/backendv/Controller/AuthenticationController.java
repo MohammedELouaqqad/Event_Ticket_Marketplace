@@ -22,14 +22,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
-    @Autowired
-    private UserRepository userRepository;
 
-    @Autowired
-    private AuthenticationService service;
+    private final AuthenticationService service;
 
     @GetMapping("/AllUsers")
-    public List<User> getAllUsers(){
+    public ResponseEntity<List<User>> getAllUsers(){
         return service.getAllUsers();
     }
 

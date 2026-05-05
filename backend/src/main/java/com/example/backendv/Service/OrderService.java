@@ -7,6 +7,7 @@ import com.example.backendv.Repository.EventRepository;
 import com.example.backendv.Repository.OrderRepository;
 
 import com.example.backendv.Repository.UserRepository;
+import com.stripe.net.StripeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,25 +18,19 @@ import java.util.List;
 @Service
 public class OrderService {
 
+    private final OrderRepository orderRepository;
+    private final EventRepository eventRepository;
+    private final EmailSenderService senderService;
+    private final UserRepository userRepository;
+    private final QrCodeGeneratorService qrCodeGeneratorService;
 
-    @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
-    private EventRepository eventRepository;
-
-    @Autowired
-    private EmailSenderService senderService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-
-    @Autowired
-    private QrCodeGeneratorService qrCodeGeneratorService;
-
-
-
+    public OrderService(OrderRepository orderRepository, EventRepository eventRepository, EmailSenderService senderService, UserRepository userRepository, QrCodeGeneratorService qrCodeGeneratorService) {
+        this.orderRepository = orderRepository;
+        this.eventRepository = eventRepository;
+        this.senderService = senderService;
+        this.userRepository = userRepository;
+        this.qrCodeGeneratorService = qrCodeGeneratorService;
+    }
 
 
     public ResponseEntity<List<Order>> getAllOrders(){
@@ -49,21 +44,16 @@ public class OrderService {
                 return ResponseEntity.badRequest().body("This quantity not available");
             }
             Event event = eventRepository.findEventById(order.getEvent().getId());
-            event.setAvailable_tickets(event.getAvailable_tickets() - order.getQuantity());
+
             order.setTotalPrice(order.getQuantity()*order.getEvent().getPrice());
+            order.setStatus("PENDING");
+
+
 
             orderRepository.save(order);
 
-            User user=userRepository.findUserById(order.getUser().getId());
 
-            senderService.sendEmailWithAttachment(user.getEmail(),
-                    "Ticket of "+order.getEvent().getName()+" Event",
-                    "Hello "+user.getName()+"\nYour order has been successfully confirmed.\nEvent: "+order.getEvent().getName()+" "+order.getEvent().getLocation()+".\nOrder ID: "+order.getId()+".\nYour ticket is attached to this email as a QR code. Please present it at the entrance for scanning.\nThank you,\nThe Events Team",
-                    qrCodeGeneratorService.generateByteQRCode("This the identifier of this order "+order.getId(),400,400));
-
-
-
-            return ResponseEntity.ok("Order added with success");
+            return ResponseEntity.ok("Order Pending added with success");
 
         }catch(Exception e){
             return ResponseEntity.internalServerError().body("Error in the Server:"+e);

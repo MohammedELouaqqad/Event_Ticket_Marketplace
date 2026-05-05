@@ -12,9 +12,11 @@ import java.util.List;
 @Service
 public class EventService {
 
+    private final EventRepository eventRepository;
 
-    @Autowired
-    private EventRepository eventRepository;
+    public EventService(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
 
 
     public ResponseEntity<List<Event>> getAllEvents(){

@@ -17,8 +17,12 @@ import java.util.Map;
 public class CloudinaryController {
 
 
-    @Autowired
-    private CloudinaryImageService cloudinaryImageService;
+
+    private final CloudinaryImageService cloudinaryImageService;
+
+    public CloudinaryController(CloudinaryImageService cloudinaryImageService) {
+        this.cloudinaryImageService = cloudinaryImageService;
+    }
 
     @PostMapping
     public ResponseEntity<Map> uploadImage(@RequestParam("image")MultipartFile file){

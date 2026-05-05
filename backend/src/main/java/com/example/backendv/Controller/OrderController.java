@@ -18,16 +18,18 @@ import java.util.List;
 public class OrderController {
 
 
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
 
+    public OrderController(OrderRepository orderRepository, OrderService orderService) {
+        this.orderRepository = orderRepository;
+        this.orderService = orderService;
+    }
 
 
     @GetMapping("/orders")
-    public List<Order> getAllOrders(){
+    public ResponseEntity<List<Order>> getAllOrders(){
         return orderService.getAllOrders();
     }
 

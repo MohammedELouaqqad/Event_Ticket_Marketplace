@@ -22,6 +22,8 @@ public class Order {
 
     private Long quantity;
 
+    private String status;
+
 
     @ToString.Exclude
     @ManyToOne

@@ -22,11 +22,9 @@ public class PaymentController {
     @PostMapping("/addingPayment")
     public ResponseEntity<String> CreatePayment(@RequestBody Order order) throws StripeException {
         ResponseEntity<String> addingPayment = paymentService.checkoutOrders(order);
-        if(addingPayment.getStatusCode().is2xxSuccessful()){
-            return ResponseEntity.ok(addingPayment.getBody());
-        }else{
-            return ResponseEntity.internalServerError().body("Error in the payment");
-        }
+        return ResponseEntity
+                .status(addingPayment.getStatusCode())
+                .body(addingPayment.getBody());
     }
 
     @PostMapping("/webhooks/stripe")

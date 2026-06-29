@@ -38,25 +38,39 @@ public class OrderService {
     }
 
 
-    public ResponseEntity<String> CreateNewOrder( Order order){
-        try{
-            if( order.getQuantity() > order.getEvent().getAvailable_tickets() ){
+    public ResponseEntity<?> CreateNewOrder(Order order) {
+        try {
+            if (order.getEvent() == null || order.getEvent().getId() == null) {
+                return ResponseEntity.badRequest().body("Event is required");
+            }
+            if (order.getUser() == null || order.getUser().getId() == null) {
+                return ResponseEntity.badRequest().body("User is required");
+            }
+
+            Event event = eventRepository.findEventById(order.getEvent().getId());
+            User user = userRepository.findUserById(order.getUser().getId());
+
+            if (event == null || user == null) {
+                return ResponseEntity.badRequest().body("Invalid event or user");
+            }
+            if (order.getQuantity() == null || order.getQuantity() < 1) {
+                return ResponseEntity.badRequest().body("Invalid quantity");
+            }
+            if (order.getQuantity() > event.getAvailable_tickets()) {
                 return ResponseEntity.badRequest().body("This quantity not available");
             }
-            Event event = eventRepository.findEventById(order.getEvent().getId());
 
-            order.setTotalPrice(order.getQuantity()*order.getEvent().getPrice());
+            order.setEvent(event);
+            order.setUser(user);
+            order.setTotalPrice(order.getQuantity() * event.getPrice());
             order.setStatus("PENDING");
 
+            Order saved = orderRepository.save(order);
 
+            return ResponseEntity.ok(saved);
 
-            orderRepository.save(order);
-
-
-            return ResponseEntity.ok("Order Pending added with success");
-
-        }catch(Exception e){
-            return ResponseEntity.internalServerError().body("Error in the Server:"+e);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error in the Server:" + e.getMessage());
         }
     }
 

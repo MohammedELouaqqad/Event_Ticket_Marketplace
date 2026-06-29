@@ -42,46 +42,66 @@ public class PaymentService{
         this.eventRepository = eventRepository;
     }
 
-    public ResponseEntity<String> checkoutOrders(Order order) throws StripeException{
-        Stripe.apiKey=secretKey;
+    public ResponseEntity<String> checkoutOrders(Order order) throws StripeException {
+        if (order.getId() == null) {
+            return ResponseEntity.badRequest().body("Order id is required before payment");
+        }
+
+        Order dbOrder = orderRepository.findOrderById(order.getId());
+        if (dbOrder == null) {
+            return ResponseEntity.badRequest().body("Order not found");
+        }
+
+        com.example.backendv.Entity.Event event = dbOrder.getEvent();
+        if (event == null || event.getName() == null || event.getPrice() == null) {
+            return ResponseEntity.badRequest().body("Invalid event data for payment");
+        }
+
+        if (dbOrder.getQuantity() == null || dbOrder.getQuantity() < 1) {
+            return ResponseEntity.badRequest().body("Invalid quantity");
+        }
+
+        long unitAmount = Math.round(event.getPrice() * 100);
+        if (unitAmount < 50) {
+            return ResponseEntity.badRequest().body("Price must be at least $0.50");
+        }
+
+        Stripe.apiKey = secretKey;
 
         SessionCreateParams.LineItem.PriceData.ProductData productData =
                 SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                        .setName(order.getEvent().getName())
+                        .setName(event.getName())
                         .build();
-
 
         SessionCreateParams.LineItem.PriceData priceData =
                 SessionCreateParams.LineItem.PriceData.builder()
-                .setCurrency("USD")
+                        .setCurrency("usd")
                         .setProductData(productData)
-                .setUnitAmount((long) (order.getEvent().getPrice() * 100L))
-                .build();
+                        .setUnitAmount(unitAmount)
+                        .build();
 
         SessionCreateParams.LineItem lineItem =
                 SessionCreateParams.LineItem.builder()
-                .setQuantity(order.getQuantity())
-                .setPriceData(priceData)
-                .build();
+                        .setQuantity(dbOrder.getQuantity())
+                        .setPriceData(priceData)
+                        .build();
 
         SessionCreateParams params =
                 SessionCreateParams.builder()
-                        .putMetadata("orderId",order.getId().toString())
-                    .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl("http://localhost:5173/events")
-                    .setCancelUrl("http://localhost:5173/events")
-                    .addLineItem(lineItem)
-                    .build();
+                        .putMetadata("orderId", dbOrder.getId().toString())
+                        .setMode(SessionCreateParams.Mode.PAYMENT)
+                        .setSuccessUrl("http://localhost:5173/events")
+                        .setCancelUrl("http://localhost:5173/events")
+                        .addLineItem(lineItem)
+                        .build();
 
-        Session session=null;
-
-        try{
-            session=Session.create(params);
+        try {
+            Session session = Session.create(params);
             return ResponseEntity.ok(session.getUrl());
-        }catch(StripeException e){
-            return ResponseEntity.internalServerError().body("Error in the Server");
+        } catch (StripeException e) {
+            System.err.println("Stripe error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Stripe error: " + e.getMessage());
         }
-
     }
 
     public ResponseEntity<String> handleWebhookEvent(String payload,

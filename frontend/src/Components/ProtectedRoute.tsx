@@ -7,9 +7,12 @@ type ProtectedRouteProps = PropsWithChildren;
 
 export default function ProtectedRoute({children}: ProtectedRouteProps){
 
-    const context= useContext(UserContext)
-    const navigate = useNavigate()
-    const {userConnected, setUserConnected}=context;  
+    const context = useContext(UserContext);
+    const navigate = useNavigate();
+
+    if (!context) return null;
+
+    const { userConnected } = context;
     
     useEffect(()=>{
         if(!userConnected){

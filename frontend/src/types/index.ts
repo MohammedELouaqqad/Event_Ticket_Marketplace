@@ -10,6 +10,7 @@ export type Event ={
 }
 
 export type Order={
+    id?: number;
     event: Event;
     user: object;
     totalPrice: number;

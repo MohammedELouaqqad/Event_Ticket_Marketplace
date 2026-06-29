@@ -1,60 +1,108 @@
-import axios from "axios"
-import React, { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { type UserRegister} from "../types/index"
+import axios from "axios";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { CiMail, CiLock, CiUser } from "react-icons/ci";
+import { type UserRegister } from "../types/index";
+import AuthLayout from "../Components/layout/AuthLayout";
+import Input from "../Components/ui/Input";
+import Button from "../Components/ui/Button";
 
+function Register() {
+  const [user, setUser] = useState<UserRegister>({
+    name: "",
+    email: "",
+    password: "",
+    role: "USER",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-function Register(){
+  const navigate = useNavigate();
 
+  function register(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    console.log(user);
 
-
-
-
-    const [user, setUser] = useState<UserRegister>({name:"",email:"",password:"",role:"USER"})
-   
-
-    const navigate = useNavigate()
-
-    function register(e: React.ChangeEvent<HTMLFormElement>){
-        alert("HIII")
-        e.preventDefault()
-        console.log(user)
-        const fetchRegisterUser = async()=>{
-            try{
-                const response = await axios.post("http://localhost:8085/api/v1/auth/register",user)
-                if(response.status === 200){
-                    navigate('/')
-                }
-                console.log(response)
-            }catch(error){
-                console.log(error)
-            }
+    const fetchRegisterUser = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:8085/api/v1/auth/register",
+          user
+        );
+        if (response.status === 200) {
+          navigate("/");
         }
-        fetchRegisterUser()
-    }
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+        setError("Registration failed. Please check your details and try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRegisterUser();
+  }
 
-    return (
-        <div className="flex items-center justify-center h-screen w-full from-slate-950 bg-gradient-to-br to-indigo-950 via-slate-900">
-            <form onSubmit={register} className="p-10 bg-white/5 w-full max-w-md backdrop-blur-md border border-white/10 p-10 rounded-lg">
-                <h1 className="text-center text-white text-2xl font-mono">LOGIN</h1>
-                <div className="flex flex-col mt-10">
-                    <label className="text-sm font-medium text-white/80">Name</label>
-                    <input onChange={(e)=> setUser({...user,name:e.target.value})} className=" rounded-lg p-3 placeholder:text-white/40 bg-white/10 border border-white/20 text-white" type='email' placeholder="example@gmail.com"/>
-                </div>
-                <div className="flex flex-col mt-10">
-                    <label className="text-sm font-medium text-white/80">Email</label>
-                    <input onChange={(e)=> setUser({...user,email:e.target.value})} className=" rounded-lg p-3 placeholder:text-white/40 bg-white/10 border border-white/20 text-white" type='email' placeholder="example@gmail.com"/>
-                </div>
-                <div className="flex flex-col mt-6">
-                    <label className="text-sm font-medium text-white/80">Password</label>
-                    <input onChange={(e)=> setUser({...user,password:e.target.value})}  className=" rounded-lg p-3 placeholder:text-white/40 bg-white/10 border border-white/20 text-white" type='password' placeholder="*************"/>
-                </div>   
-                <button className="font-mono mt-10 bg-indigo-600 text-white hover:bg-indigo-500 w-full rounded-lg p-4">LOGIN</button>             
-                <Link to="/" className="text-center mt-6 block">You have already an account?</Link>
-            </form>
+  return (
+    <AuthLayout
+      title="Create your account"
+      subtitle="Join TRICKER and start booking amazing events"
+    >
+      <form
+        onSubmit={register}
+        className="rounded-2xl border border-slate-100 bg-white p-8 shadow-card"
+      >
+        {error && (
+          <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+            {error}
+          </div>
+        )}
+
+        <div className="space-y-5">
+          <Input
+            label="Full name"
+            type="text"
+            placeholder="John Doe"
+            leftIcon={<CiUser className="text-lg" />}
+            value={user.name}
+            onChange={(e) => setUser({ ...user, name: e.target.value })}
+          />
+          <Input
+            label="Email address"
+            type="email"
+            placeholder="you@example.com"
+            leftIcon={<CiMail className="text-lg" />}
+            value={user.email}
+            onChange={(e) => setUser({ ...user, email: e.target.value })}
+          />
+          <Input
+            label="Password"
+            type="password"
+            placeholder="••••••••"
+            leftIcon={<CiLock className="text-lg" />}
+            value={user.password}
+            onChange={(e) => setUser({ ...user, password: e.target.value })}
+          />
         </div>
-    )
+
+        <Button type="submit" loading={loading} className="mt-8 w-full" size="lg">
+          Create account
+        </Button>
+
+        <p className="mt-6 text-center text-sm text-slate-500">
+          Already have an account?{" "}
+          <Link
+            to="/"
+            className="font-semibold text-brand-600 hover:text-brand-500 transition-colors"
+          >
+            Sign in
+          </Link>
+        </p>
+      </form>
+    </AuthLayout>
+  );
 }
 
-
-export default Register
+export default Register;

@@ -1,73 +1,110 @@
-import axios from "axios"
-import React, { useContext, useState } from "react"
-import { Link, useNavigate } from 'react-router-dom';
-import { type UserRegister, type UserAuthenticate, type UserContextType} from "../types/index"
+import axios from "axios";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { CiMail, CiLock } from "react-icons/ci";
+import { type UserAuthenticate } from "../types/index";
 import { UserContext } from "../context/UserContext";
+import AuthLayout from "../Components/layout/AuthLayout";
+import Input from "../Components/ui/Input";
+import Button from "../Components/ui/Button";
 
+function Authenticate() {
+  const [userAuthenticate, setUserAuthenticate] = useState<UserAuthenticate>({
+    email: "",
+    password: "",
+    role: "USER",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
+  const context = useContext(UserContext);
+  if (!context) return null;
 
-function Authenticate(){
+  const { setUserConnected } = context;
+  const navigate = useNavigate();
 
+  function authenticate(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-
-    const [userAuthenticate, setUserAuthenticate] = useState<UserAuthenticate>({email:"",password:"",role:"USER"})
-    let token;
-    
-
-    const context= useContext(UserContext)
-
-
-    if(!context){
-        return;
-    }
-
-    const {userConnected, setUserConnected}=context;   
-    // const {currentUser, setCurrentUser}=context;  
-    // const {isAuthenticated, setIsAuthenticated} =
-
-
-
-    const navigate = useNavigate()
-    
-
-    function authenticate(e: React.ChangeEvent<HTMLFormElement>){
-        e.preventDefault()
-
-        const fetchAuthenticateUser = async()=>{
-            try{
-                const response = await axios.post("http://localhost:8085/api/v1/auth/authenticate",userAuthenticate)
-                if(response.status === 200){
-                    token=response.data.token;
-                    setUserConnected(response.data.user);
-                    localStorage.setItem('token',token)
-                    navigate('/events')
-                }
-                console.log(response)
-            }catch(error){
-                console.log(error)
-            }
+    const fetchAuthenticateUser = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:8085/api/v1/auth/authenticate",
+          userAuthenticate
+        );
+        if (response.status === 200) {
+          const token = response.data.token;
+          setUserConnected(response.data.user);
+          localStorage.setItem("token", token);
+          navigate("/events");
         }
-        fetchAuthenticateUser()
-    }
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+        setError("Invalid email or password. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAuthenticateUser();
+  }
 
-    return (
-        <div className="flex items-center justify-center h-screen w-full from-slate-950 bg-gradient-to-br to-indigo-950 via-slate-900">
-            <form onSubmit={authenticate} className="p-10 bg-white/5 w-full max-w-md backdrop-blur-md border border-white/10 p-10 rounded-lg">
-                <h1 className="text-center text-white text-2xl font-mono">LOGIN</h1>
-                <div className="flex flex-col mt-10">
-                    <label className="text-sm font-medium text-white/80">Email</label>
-                    <input onChange={(e)=> setUserAuthenticate({...userAuthenticate,email:e.target.value})} className=" rounded-lg p-3 placeholder:text-white/40 bg-white/10 border border-white/20 text-white" type='email' placeholder="example@gmail.com"/>
-                </div>
-                <div className="flex flex-col mt-6">
-                    <label className="text-sm font-medium text-white/80">Password</label>
-                    <input onChange={(e)=> setUserAuthenticate({...userAuthenticate,password:e.target.value})}  className=" rounded-lg p-3 placeholder:text-white/40 bg-white/10 border border-white/20 text-white" type='password' placeholder="*************"/>
-                </div>   
-                <button className="font-mono mt-10 bg-indigo-600 text-white hover:bg-indigo-500 w-full rounded-lg p-4">LOGIN</button>             
-                <Link to="/Register" className="text-center mt-6 block">You don't have any account already?</Link>
-            </form>
+  return (
+    <AuthLayout
+      title="Welcome back"
+      subtitle="Sign in to your account to continue"
+    >
+      <form
+        onSubmit={authenticate}
+        className="rounded-2xl border border-slate-100 bg-white p-8 shadow-card"
+      >
+        {error && (
+          <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+            {error}
+          </div>
+        )}
+
+        <div className="space-y-5">
+          <Input
+            label="Email address"
+            type="email"
+            placeholder="you@example.com"
+            leftIcon={<CiMail className="text-lg" />}
+            value={userAuthenticate.email}
+            onChange={(e) =>
+              setUserAuthenticate({ ...userAuthenticate, email: e.target.value })
+            }
+          />
+          <Input
+            label="Password"
+            type="password"
+            placeholder="••••••••"
+            leftIcon={<CiLock className="text-lg" />}
+            value={userAuthenticate.password}
+            onChange={(e) =>
+              setUserAuthenticate({ ...userAuthenticate, password: e.target.value })
+            }
+          />
         </div>
-    )
-}
 
+        <Button type="submit" loading={loading} className="mt-8 w-full" size="lg">
+          Sign in
+        </Button>
+
+        <p className="mt-6 text-center text-sm text-slate-500">
+          Don&apos;t have an account?{" "}
+          <Link
+            to="/register"
+            className="font-semibold text-brand-600 hover:text-brand-500 transition-colors"
+          >
+            Create one
+          </Link>
+        </p>
+      </form>
+    </AuthLayout>
+  );
+}
 
 export default Authenticate;

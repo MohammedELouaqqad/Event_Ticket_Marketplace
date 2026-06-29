@@ -21,9 +21,11 @@ export default function AuthProvider({
     if(!context){
         return;
     }
-    const {userConnected, setUserConnected}=context;  
+    const { userConnected } = context;
 
-    const [user] = useState<UserRegister | null>(isAuthenticated ? {id:userConnected?.id} : null)
+    const [user] = useState<UserRegister | null>(
+      isAuthenticated && userConnected ? userConnected : null
+    );
 
     return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>
 }

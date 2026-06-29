@@ -32,6 +32,7 @@ public class User implements UserDetails {
     private String email;
 
     @NotNull
+    @JsonIgnore
     private String password;
 
     private String role;
@@ -49,30 +50,43 @@ public class User implements UserDetails {
     }
 //    !!!! : Role_ + role Or role
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));
     }
+
     @Override
+    @JsonIgnore
     public String getUsername(){
         return email;
     }
+
     @Override
+    @JsonIgnore
     public String getPassword(){
         return password;
     }
+
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
+
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
+
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }

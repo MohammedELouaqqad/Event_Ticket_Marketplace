@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Authenticate from "./pages/Authenticate";
@@ -7,9 +7,17 @@ import Card from "./pages/Card";
 import Register from "./pages/Register";
 import { UserContext } from "./context/UserContext";
 import { type UserRegister } from "./types/index";
+import { getStoredUser } from "./lib/auth";
 
 function App() {
   const [userConnected, setUserConnected] = useState<UserRegister | null>(null);
+
+  useEffect(() => {
+    const storedUser = getStoredUser();
+    if (storedUser) {
+      setUserConnected(storedUser);
+    }
+  }, []);
 
   return (
     <UserContext.Provider value={{ userConnected, setUserConnected }}>

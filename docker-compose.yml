@@ -1,0 +1,42 @@
+services:
+  mysql:
+    image: mysql:8
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: Ticket_Marketplace
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend-service:
+    build: ./backend
+    ports:
+      - "8085:8085"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+    volumes:
+      - ./backend/src/main/resources/application-local.properties:/config/application-local.properties:ro
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_CONFIG_ADDITIONAL_LOCATION: optional:file:/config/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/Ticket_Marketplace?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+
+  frontend-service:
+    build: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend-service
+
+volumes:
+  mysql_data:

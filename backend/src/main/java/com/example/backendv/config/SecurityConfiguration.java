@@ -14,16 +14,19 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 import static org.apache.catalina.webresources.TomcatURLStreamHandlerFactory.disable;
+import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
+import org.hibernate.sql.Delete;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private static final String[] WHILE_LIST_URL= {"/api/v1/**","/api/events/**","/api/orders/**","/api/cloudinary/**"};
 
     private final JwtAuthentificationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
@@ -33,15 +36,23 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req ->
-                        req.anyRequest().permitAll()
-//                        req.requestMatchers(WHILE_LIST_URL).permitAll()
-//                                .requestMatchers("/api/v1/auth/**").permitAll()
-//                                .requestMatchers(POST, "/api/events/**").hasAuthority("ADMIN")
-//                                .requestMatchers(GET, "/api/events/**").authenticated()
-//                                .requestMatchers(POST, "/api/orders/**").authenticated()
-//                                .requestMatchers(GET, "/api/orders/**").hasAuthority("ADMIN")
-//                                .requestMatchers("/api/cloudinary/**").authenticated()
+                .authorizeHttpRequests(req -> req
+
+                               .requestMatchers("/api/v1/auth/**").permitAll()
+                               .requestMatchers("/api/webhooks/stripe").permitAll()
+
+                                .requestMatchers(GET, "/api/events/**").authenticated()
+
+                               .requestMatchers(POST, "/api/events/**").hasAuthority("ADMIN")
+                                .requestMatchers(DELETE, "/api/events/**").hasAuthority("ADMIN")
+                                .requestMatchers(PUT, "/api/events/**").hasAuthority("ADMIN")
+
+                               .requestMatchers(GET, "/api/orders/**").hasAuthority("ADMIN")
+                               .requestMatchers(POST, "/api/orders/**").authenticated()
+                               .requestMatchers(POST, "/api/addingPayment").authenticated()
+                               
+                               .requestMatchers("/api/cloudinary/**").authenticated()
+                               .anyRequest().authenticated()
                 )
 
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

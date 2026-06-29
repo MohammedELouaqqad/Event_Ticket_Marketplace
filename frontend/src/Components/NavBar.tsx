@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { IoTicketOutline, IoLogOutOutline, IoMenu, IoClose } from "react-icons/io5";
 import { UserContext } from "../context/UserContext";
 import { getInitials, cn } from "../lib/utils";
+import { clearAuth } from "../lib/auth";
 import Button from "./ui/Button";
 
 function NavBar() {
@@ -13,10 +14,11 @@ function NavBar() {
 
   if (!context) return null;
 
-  const { userConnected } = context;
+  const { userConnected, setUserConnected } = context;
 
   function handleLogout() {
-    localStorage.removeItem("token");
+    clearAuth();
+    setUserConnected(null);
     setMobileOpen(false);
     navigate("/");
   }

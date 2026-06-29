@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { type Event, type Order } from "../types/index";
 import { UserContext } from "../context/UserContext";
 import { formatPrice, cn, getApiErrorMessage } from "../lib/utils";
+import { getToken } from "../lib/auth";
 
 function Card() {
   const [ticket, setTicket] = useState<Event | null>(null);
@@ -85,7 +86,7 @@ function Card() {
     localStorage.setItem("orders", JSON.stringify({}));
   }
 
-  var token = localStorage.getItem("token");
+  const token = getToken();
 
   useEffect(() => {
     console.log(userConnected);

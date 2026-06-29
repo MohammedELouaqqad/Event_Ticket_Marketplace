@@ -7,6 +7,7 @@ import { UserContext } from "../context/UserContext";
 import AuthLayout from "../Components/layout/AuthLayout";
 import Input from "../Components/ui/Input";
 import Button from "../Components/ui/Button";
+import { saveAuth } from "../lib/auth";
 
 function Authenticate() {
   const [userAuthenticate, setUserAuthenticate] = useState<UserAuthenticate>({
@@ -37,7 +38,7 @@ function Authenticate() {
         if (response.status === 200) {
           const token = response.data.token;
           setUserConnected(response.data.user);
-          localStorage.setItem("token", token);
+          saveAuth(token, response.data.user);
           navigate("/events");
         }
         console.log(response);

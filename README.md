@@ -21,9 +21,6 @@ Plateforme web de vente de billets d'événements. Les utilisateurs peuvent parc
 - [Routes frontend](#routes-frontend)
 - [Modèle de données](#modèle-de-données)
 - [Tests](#tests)
-- [Dépannage](#dépannage)
-- [Sécurité](#sécurité)
-- [Améliorations futures](#améliorations-futures)
 
 ---
 
@@ -420,48 +417,6 @@ cd backend
 4. Payer avec `4242 4242 4242 4242`
 5. Vérifier dans `stripe listen` : `[200] POST .../webhooks/stripe`
 6. Vérifier en BDD : `status = CONFIRMED`
-
----
-
-## Dépannage
-
-| Problème | Cause probable | Solution |
-|----------|----------------|----------|
-| 500 sur `/api/addingPayment` | `order.id` null | Vérifier que `/api/orders` retourne l'Order avec id |
-| `GrantedAuthority` JSON error | Sérialisation User | `@JsonIgnore` sur méthodes UserDetails |
-| `[object Object]` frontend | Erreur API mal affichée | Utiliser `getApiErrorMessage()` |
-| Paiement OK mais status PENDING | Webhook non reçu | Lancer `stripe listen`, vérifier `whsec_...` |
-| Pas d'email | SMTP mal configuré | Vérifier Gmail App Password |
-| Page Stripe ne s'ouvre pas | `/api/addingPayment` non appelé | Vérifier `Card.tsx` flux 2 étapes |
-| Image event cassée | Cloudinary mal configuré | Vérifier `CloudinaryConfig.java` |
-
----
-
-## Sécurité
-
-Recommandations pour la production :
-
-- [ ] Externaliser secrets via variables d'environnement
-- [ ] Activer JWT sur toutes les routes sensibles
-- [ ] Retirer `permitAll()` dans `SecurityConfiguration`
-- [ ] Ne pas exposer `password` dans les réponses JSON
-- [ ] Utiliser clés Stripe **Live** uniquement en production
-- [ ] Configurer webhook Stripe en production (URL publique HTTPS)
-- [ ] Ajouter `.env` et secrets au `.gitignore`
-
----
-
-## Améliorations futures
-
-- [ ] Page d'accueil (landing)
-- [ ] Page détail événement `/events/:id`
-- [ ] Historique des commandes utilisateur
-- [ ] Page confirmation paiement `/payment/success`
-- [ ] Profil utilisateur
-- [ ] Protection des routes frontend (`ProtectedRoute`)
-- [ ] DTOs backend (éviter exposition entités JPA)
-- [ ] Variables d'environnement pour tous les secrets
-- [ ] Tests unitaires et d'intégration
 
 ---
 

@@ -35,8 +35,8 @@ function AddingEvent({ onCancel }: AddingEventProps) {
         const file = new FormData();
         const image = imageFile ?? event.fileName;
         if (image) file.append("image", image);
-        const response = await axios.post(
-          "http://localhost:8085/api/cloudinary/upload",
+        const response = await api.post(
+          "/api/cloudinary/upload",
           file,
           {
             headers: {

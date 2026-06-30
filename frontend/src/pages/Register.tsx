@@ -6,6 +6,7 @@ import { type UserRegister } from "../types/index";
 import AuthLayout from "../Components/layout/AuthLayout";
 import Input from "../Components/ui/Input";
 import Button from "../Components/ui/Button";
+import api from "../lib/api";
 
 function Register() {
   const [user, setUser] = useState<UserRegister>({
@@ -27,8 +28,8 @@ function Register() {
 
     const fetchRegisterUser = async () => {
       try {
-        const response = await axios.post(
-          "http://localhost:8085/api/v1/auth/register",
+        const response = await api.post(
+          "/api/v1/auth/register",
           user
         );
         if (response.status === 200) {

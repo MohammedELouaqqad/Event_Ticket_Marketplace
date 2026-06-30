@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { IoCalendarOutline, IoAdd } from "react-icons/io5";
-import axios from "axios";
+
 import NavBar from "../Components/NavBar";
 import EventCard from "../Components/EventCard";
 import AddingEvent from "../Components/AddingEvent";
@@ -11,6 +11,8 @@ import { EventCardSkeleton } from "../Components/ui/Skeleton";
 import Button from "../Components/ui/Button";
 import { type Event } from "../types/index";
 import { UserContext } from "../context/UserContext";
+import api from "../lib/api"
+
 
 function Events() {
   const [showAddingPage, setShowAddingPage] = useState(false);
@@ -26,15 +28,16 @@ function Events() {
 
   const { userConnected } = context;
 
+
   useEffect(() => {
     const fetchAllEvents = async () => {
       try {
-        const response = await axios.get("http://localhost:8085/api/events", {
+        const response = await api.get("/api/events", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        if (response.status == 200) {
+        if (response.status === 200) {
           setAllEvents(response.data);
         }
         console.log(response);
@@ -70,25 +73,10 @@ function Events() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  console.log(userConnected)
+  
+  
+  
   return (
     <div className="flex min-h-screen flex-col">
       <NavBar />
@@ -113,13 +101,12 @@ function Events() {
                 )}
               </p>
             </div>
-            <Button
-              onClick={() => setShowAddingPage(true)}
-              leftIcon={<IoAdd className="text-lg" />}
-              className="shrink-0"
-            >
+          
+          {userConnected?.role === "ADMIN" && (
+            <Button onClick={() => setShowAddingPage(true)}>
               Add Event
             </Button>
+          )}
           </div>
 
           {/* Search */}
@@ -145,8 +132,20 @@ function Events() {
                   ? `No results for "${query}". Try a different search term.`
                   : "Be the first to list an event on TRICKER."
               }
-              actionLabel={query ? "Clear search" : "Add Event"}
-              onAction={() => (query ? setQuery("") : setShowAddingPage(true))}
+              actionLabel={
+                query
+                  ? "Clear search"
+                  : userConnected?.role === "ADMIN"
+                    ? "Add Event"
+                    : undefined
+              }
+              onAction={
+                query
+                  ? () => setQuery("")
+                  : userConnected?.role === "ADMIN"
+                    ? () => setShowAddingPage(true)
+                    : undefined
+              }
             />
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 animate-fade-in">

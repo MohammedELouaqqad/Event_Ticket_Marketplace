@@ -4,6 +4,7 @@ import { IoArrowBack, IoImageOutline } from "react-icons/io5";
 import { type Event } from "../types/index";
 import Button from "./ui/Button";
 import Input from "./ui/Input";
+import api from "../lib/api";
 
 type AddingEventProps = {
   onCancel?: () => void;
@@ -55,7 +56,7 @@ function AddingEvent({ onCancel }: AddingEventProps) {
     console.log(event);
     const fetchAddingEvent = async () => {
       try {
-        const response = await axios.post("http://localhost:8085/api/events", event, {
+        const response = await api.post("/api/events", event, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

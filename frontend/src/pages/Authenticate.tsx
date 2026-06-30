@@ -8,6 +8,7 @@ import AuthLayout from "../Components/layout/AuthLayout";
 import Input from "../Components/ui/Input";
 import Button from "../Components/ui/Button";
 import { saveAuth } from "../lib/auth";
+import api from "../lib/api";
 
 function Authenticate() {
   const [userAuthenticate, setUserAuthenticate] = useState<UserAuthenticate>({
@@ -31,8 +32,8 @@ function Authenticate() {
 
     const fetchAuthenticateUser = async () => {
       try {
-        const response = await axios.post(
-          "http://localhost:8085/api/v1/auth/authenticate",
+        const response = await api.post(
+          "/api/v1/auth/authenticate",
           userAuthenticate
         );
         if (response.status === 200) {

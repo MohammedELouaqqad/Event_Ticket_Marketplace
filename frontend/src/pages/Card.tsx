@@ -13,6 +13,7 @@ import { type Event, type Order } from "../types/index";
 import { UserContext } from "../context/UserContext";
 import { formatPrice, cn, getApiErrorMessage } from "../lib/utils";
 import { getToken } from "../lib/auth";
+import api from "../lib/api";
 
 function Card() {
   const [ticket, setTicket] = useState<Event | null>(null);
@@ -107,8 +108,8 @@ function Card() {
           quantity: order.quantity,
           totalPrice: 0,
         }
-        const orderRes = await axios.post(
-          "http://localhost:8085/api/orders",
+        const orderRes = await api.post(
+          "/api/orders",
           payload,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -120,8 +121,8 @@ function Card() {
           return;
         }
 
-        const paymentRes = await axios.post(
-          "http://localhost:8085/api/addingPayment",
+        const paymentRes = await api.post(
+          "/api/addingPayment",
           savedOrder,
           { headers: { Authorization: `Bearer ${token}` } }
         );

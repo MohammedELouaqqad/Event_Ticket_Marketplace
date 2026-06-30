@@ -62,7 +62,7 @@ public class AuthenticationService {
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
+                .role("USER")
                 .build();
         if(repository.existsUserByEmail(request.getEmail())){
             ResponseEntity.badRequest().body("This Email already used");

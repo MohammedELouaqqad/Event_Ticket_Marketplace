@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import { useState } from "react";
 import { IoArrowBack, IoImageOutline } from "react-icons/io5";
 import { type Event } from "../types/index";

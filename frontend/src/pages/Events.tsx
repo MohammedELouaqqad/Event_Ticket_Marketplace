@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { IoCalendarOutline, IoAdd } from "react-icons/io5";
+import { IoCalendarOutline } from "react-icons/io5";
 
 import NavBar from "../Components/NavBar";
 import EventCard from "../Components/EventCard";
